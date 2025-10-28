@@ -5,9 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-@SpringBootApplication(scanBasePackages = {"esvar.ua.dekanatcontrolpanel", "ua.ntu.controlpanel"})
-@EntityScan(basePackages = {"ua.ntu.controlpanel.entity"})
-@EnableJpaRepositories(basePackages = {"ua.ntu.controlpanel.repo"})
+@SpringBootApplication
 public class ControlPanelApplication {
 
     public static void main(String[] args) {

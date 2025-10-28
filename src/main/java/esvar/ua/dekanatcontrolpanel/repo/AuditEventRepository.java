@@ -1,7 +1,7 @@
-package ua.ntu.controlpanel.repo;
+package esvar.ua.dekanatcontrolpanel.repo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ua.ntu.controlpanel.entity.AuditEvent;
+import esvar.ua.dekanatcontrolpanel.entity.AuditEvent;
 
 public interface AuditEventRepository extends JpaRepository<AuditEvent, Long> {
 }

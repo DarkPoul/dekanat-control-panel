@@ -1,4 +1,4 @@
-package ua.ntu.controlpanel.config;
+package esvar.ua.dekanatcontrolpanel.config;
 
 import java.util.List;
 import org.springframework.context.annotation.Bean;
@@ -13,8 +13,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import ua.ntu.controlpanel.entity.User;
-import ua.ntu.controlpanel.repo.UserRepository;
+import esvar.ua.dekanatcontrolpanel.entity.User;
+import esvar.ua.dekanatcontrolpanel.repo.UserRepository;
 
 @Configuration
 @EnableWebSecurity
@@ -28,7 +28,7 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService(UserRepository userRepository) {
         return username -> userRepository.findByEmail(username)
-                .map(user -> buildUserDetails(user))
+                .map(this::buildUserDetails)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
     }
 
@@ -46,16 +46,16 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/VAADIN/**", "/frontend/**", "/images/**", "/styles/**", "/line-awesome/**", "/control-panel/login").permitAll()
+                        .requestMatchers("/VAADIN/**", "/frontend/**", "/images/**", "/styles/**", "/line-awesome/**", "/login").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form -> form
-                        .loginPage("/control-panel/login")
-                        .loginProcessingUrl("/control-panel/login")
+                        .loginPage("/login")
+                        .loginProcessingUrl("/login")
                         .defaultSuccessUrl("/control-panel/", true)
-                        .failureUrl("/control-panel/login?error"))
+                        .failureUrl("/login?error"))
                 .logout(logout -> logout
-                        .logoutUrl("/control-panel/logout")
-                        .logoutSuccessUrl("/control-panel/login?logout"));
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout"));
 
         return http.build();
     }

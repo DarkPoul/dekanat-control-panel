@@ -1,8 +1,8 @@
-package ua.ntu.controlpanel.repo;
+package esvar.ua.dekanatcontrolpanel.repo;
 
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
-import ua.ntu.controlpanel.entity.User;
+import esvar.ua.dekanatcontrolpanel.entity.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 

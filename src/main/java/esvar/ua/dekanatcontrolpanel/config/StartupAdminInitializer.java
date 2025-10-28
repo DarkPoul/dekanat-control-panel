@@ -1,10 +1,10 @@
-package ua.ntu.controlpanel.config;
+package esvar.ua.dekanatcontrolpanel.config;
 
 import java.time.Instant;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import ua.ntu.controlpanel.entity.User;
-import ua.ntu.controlpanel.repo.UserRepository;
+import esvar.ua.dekanatcontrolpanel.entity.User;
+import esvar.ua.dekanatcontrolpanel.repo.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Component
