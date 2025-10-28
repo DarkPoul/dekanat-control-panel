@@ -1,13 +1,15 @@
-package ua.ntu.controlpanel.ui;
+package esvar.ua.dekanatcontrolpanel.ui;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import jakarta.annotation.security.PermitAll;
 
 @PageTitle("Control Panel Dashboard")
 @Route(value = "", layout = RootLayout.class)
+@PermitAll
 public class DashboardView extends VerticalLayout {
 
     public DashboardView() {

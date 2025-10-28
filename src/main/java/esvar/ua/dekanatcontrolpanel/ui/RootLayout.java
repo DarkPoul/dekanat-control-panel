@@ -1,4 +1,4 @@
-package ua.ntu.controlpanel.ui;
+package esvar.ua.dekanatcontrolpanel.ui;
 
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.html.H1;
