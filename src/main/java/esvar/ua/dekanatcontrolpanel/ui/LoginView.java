@@ -4,61 +4,63 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.login.LoginI18n;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 
 @Route("login")
 @PageTitle("Вхід | Control Panel")
+@AnonymousAllowed
 public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
-    private final LoginForm loginForm;
-    private final Paragraph message;
+    private final LoginForm login = new LoginForm();
+
 
     public LoginView() {
+
+        login.setForgotPasswordButtonVisible(false);
+        addClassName("login-view");
         setSizeFull();
-        setAlignItems(FlexComponent.Alignment.CENTER);
-        setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
 
-        loginForm = new LoginForm();
-        loginForm.setAction("login");
-        loginForm.setForgotPasswordButtonVisible(false);
-        loginForm.setI18n(createCustomI18n());
+        setJustifyContentMode(JustifyContentMode.CENTER);
+        setAlignItems(Alignment.CENTER);
 
-        message = new Paragraph();
-        message.setVisible(false);
+        login.setAction("login");
 
-        add(new H1("Control Panel"), loginForm, message);
+        LoginI18n i18n = LoginI18n.createDefault();
+
+        LoginI18n.Form i18nForm = i18n.getForm();
+        i18nForm.setTitle("Вхід");
+        i18nForm.setUsername("Ім'я користувача");
+        i18nForm.setPassword("Пароль");
+        i18nForm.setSubmit("Увійти");
+        i18nForm.setForgotPassword("Забули пароль?");
+        i18n.setForm(i18nForm);
+
+
+        LoginI18n.ErrorMessage i18nErrorMessage = i18n.getErrorMessage();
+        i18nErrorMessage.setTitle("Неправильне ім'я користувача або пароль");
+        i18nErrorMessage.setMessage(
+                "Перевірте, чи правильно введені ім'я користувача та пароль, і спробуйте ще раз.");
+        i18n.setErrorMessage(i18nErrorMessage);
+
+        login.setI18n(i18n);
+
+//        UI.getCurrent().access(() -> UI.getCurrent().navigate(""));
+
+        add(new H1("Dekanat CRM"), login);
     }
 
     @Override
-    public void beforeEnter(BeforeEnterEvent event) {
-        boolean error = event.getLocation().getQueryParameters().getParameters().containsKey("error");
-        boolean logout = event.getLocation().getQueryParameters().getParameters().containsKey("logout");
-
-        loginForm.setError(error);
-        if (error) {
-            message.setText("Невірний email або пароль");
-            message.setVisible(true);
-        } else if (logout) {
-            message.setText("Вихід виконано");
-            message.setVisible(true);
-        } else {
-            message.setVisible(false);
+    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
+        if(beforeEnterEvent.getLocation()
+                .getQueryParameters()
+                .getParameters()
+                .containsKey("error")) {
+            login.setError(true);
         }
-    }
-
-    private LoginI18n createCustomI18n() {
-        LoginI18n i18n = LoginI18n.createDefault();
-        i18n.getForm().setTitle("Вхід");
-        i18n.getForm().setUsername("Email");
-        i18n.getForm().setPassword("Пароль");
-        i18n.getForm().setSubmit("Увійти");
-        i18n.getErrorMessage().setTitle("Помилка входу");
-        i18n.getErrorMessage().setMessage("Невірний email або пароль");
-        return i18n;
     }
 }

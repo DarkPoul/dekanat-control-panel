@@ -41,7 +41,8 @@ public class User {
     public enum Role {
         ADMIN,
         TEST_MANAGER,
-        VIEWER
+        VIEWER,
+        DEAD
     }
 
     @PrePersist
