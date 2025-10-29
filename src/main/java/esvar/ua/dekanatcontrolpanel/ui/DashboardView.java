@@ -36,11 +36,7 @@ public class DashboardView extends VerticalLayout {
         setDefaultHorizontalComponentAlignment(Alignment.STRETCH);
         getStyle().set("gap", "1.5rem");
 
-        H2 heading = new H2("Панель керування");
-        heading.getStyle().set("color", "#111827");
-        heading.getStyle().set("margin", "0");
-
-        add(heading, createEnvironmentSection(), createRecentErrorsCard(), createRecentActionsCard());
+        add(createEnvironmentSection(), createRecentErrorsCard(), createRecentActionsCard());
     }
 
     private HorizontalLayout createEnvironmentSection() {

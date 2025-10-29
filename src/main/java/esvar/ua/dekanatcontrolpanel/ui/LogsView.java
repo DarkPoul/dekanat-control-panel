@@ -34,16 +34,14 @@ public class LogsView extends VerticalLayout {
         setDefaultHorizontalComponentAlignment(Alignment.STRETCH);
         getStyle().set("gap", "1.5rem");
 
-        H2 title = new H2("Журнал помилок");
-        title.getStyle().set("color", "#111827");
-        title.getStyle().set("margin", "0");
+
 
         Dialog detailsDialog = createDetailsDialog();
 
         Card filtersCard = createFiltersCard();
         Card logsCard = createLogsCard(detailsDialog);
 
-        add(title, filtersCard, logsCard, detailsDialog);
+        add(filtersCard, logsCard, detailsDialog);
     }
 
     private Card createFiltersCard() {

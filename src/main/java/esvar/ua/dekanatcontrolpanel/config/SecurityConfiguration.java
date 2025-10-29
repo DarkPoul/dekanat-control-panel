@@ -22,8 +22,10 @@ public class SecurityConfiguration extends VaadinWebSecurity {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers(new AntPathRequestMatcher("/public/**")).permitAll()
-
+                .requestMatchers("/public/**").permitAll()
+                .requestMatchers("/api/test/status").authenticated()
+                .requestMatchers("/api/test/start", "/api/test/stop", "/api/test/restart", "/api/test/update")
+                .hasAnyRole("ADMIN", "TEST_MANAGER")
         );
 
         super.configure(http);

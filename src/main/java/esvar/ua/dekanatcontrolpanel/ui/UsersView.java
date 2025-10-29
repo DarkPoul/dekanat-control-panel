@@ -40,27 +40,14 @@ public class UsersView extends VerticalLayout {
         setDefaultHorizontalComponentAlignment(Alignment.STRETCH);
         getStyle().set("gap", "1.5rem");
 
-        H2 heading = new H2("Користувачі доступу");
-        heading.getStyle().set("margin", "0");
-        heading.getStyle().set("color", "#111827");
-
         Dialog userDialog = createUserDialog();
 
-        Button addUserButton = new Button("Додати користувача");
-        addUserButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        addUserButton.addClickListener(event -> userDialog.open());
+        Card usersCard = createUsersCard(userDialog);
 
-        HorizontalLayout header = new HorizontalLayout(heading, addUserButton);
-        header.setWidthFull();
-        header.setJustifyContentMode(JustifyContentMode.BETWEEN);
-        header.setAlignItems(Alignment.CENTER);
-
-        Card usersCard = createUsersCard();
-
-        add(header, usersCard, userDialog);
+        add(usersCard, userDialog);
     }
 
-    private Card createUsersCard() {
+    private Card createUsersCard(Dialog userDialog) {
         Card card = new Card();
         card.getStyle().set("display", "flex");
         card.getStyle().set("flex-direction", "column");
@@ -94,7 +81,20 @@ public class UsersView extends VerticalLayout {
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
         grid.setItems(MockData.users());
 
-        card.add(title, grid);
+        Button addUserButton = new Button("Додати користувача", event -> userDialog.open());
+        addUserButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        HorizontalLayout footer = new HorizontalLayout(addUserButton);
+        footer.setWidthFull();
+        footer.setJustifyContentMode(JustifyContentMode.END);
+        footer.setAlignItems(Alignment.CENTER);
+        footer.setPadding(false);
+        footer.getStyle().set("border-top", "1px solid #e5e7eb");
+        footer.getStyle().set("margin", "0 -1.5rem -1.5rem");
+        footer.getStyle().set("padding", "1rem 1.5rem 1.5rem");
+
+        card.add(title, grid, footer);
+
         return card;
     }
 

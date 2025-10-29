@@ -20,3 +20,13 @@ server:
 logging:
   level:
     root: INFO
+
+environments:
+  test:
+    scripts:
+      update: /opt/control-panel/scripts/update_test.sh
+      start: /opt/control-panel/scripts/start_test.sh
+      stop: /opt/control-panel/scripts/stop_test.sh
+      restart: /opt/control-panel/scripts/restart_test.sh
+      status: /opt/control-panel/scripts/status_test.sh
+    health-url: https://dekanat.ntu.edu.ua/test/actuator/health
