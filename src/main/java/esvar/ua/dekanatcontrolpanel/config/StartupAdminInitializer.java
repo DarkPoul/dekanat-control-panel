@@ -20,14 +20,26 @@ public class StartupAdminInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        if (userRepository.count() == 0) {
-            User admin = new User();
-            admin.setEmail("admin@ntu");
-            admin.setPasswordHash(passwordEncoder.encode("admin"));
-            admin.setRole(User.Role.ADMIN);
-            admin.setActive(true);
-            admin.setCreatedAt(Instant.now());
-            userRepository.save(admin);
-        }
+        userRepository.findByEmail("admin").or(() -> userRepository.findByEmail("admin@ntu"))
+                .ifPresentOrElse(existing -> {
+                    if (!"admin".equals(existing.getEmail())) {
+                        existing.setEmail("admin");
+                    }
+                    existing.setPasswordHash(passwordEncoder.encode("admin"));
+                    existing.setRole(User.Role.ADMIN);
+                    existing.setActive(true);
+                    if (existing.getCreatedAt() == null) {
+                        existing.setCreatedAt(Instant.now());
+                    }
+                    userRepository.save(existing);
+                }, () -> {
+                    User admin = new User();
+                    admin.setEmail("admin");
+                    admin.setPasswordHash(passwordEncoder.encode("admin"));
+                    admin.setRole(User.Role.ADMIN);
+                    admin.setActive(true);
+                    admin.setCreatedAt(Instant.now());
+                    userRepository.save(admin);
+                });
     }
 }
