@@ -54,6 +54,8 @@ public class DashboardView extends VerticalLayout {
                         info("Health: OK")
                 ),
                 List.of(
+                        // TODO: показувати ці кнопки лише для ролей ADMIN/TEST_MANAGER
+                        //  (VIEWER не повинен їх бачити або взаємодіяти з ними)
                         primaryButton("Оновити тест"),
                         tertiaryButton("Перезапустити"),
                         tertiaryButton("Запустити"),

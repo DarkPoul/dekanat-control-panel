@@ -20,6 +20,15 @@ public final class SecurityUtils {
         return Optional.ofNullable(authentication.getName());
     }
 
+    public static String getCurrentUserEmailOrNull() {
+        return getCurrentUserEmail().orElse(null);
+    }
+
+    public static String getCurrentUserEmailOrThrow() {
+        return getCurrentUserEmail().orElseThrow(() ->
+                new IllegalStateException("No authenticated user found in security context"));
+    }
+
     public static boolean hasRole(String role) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
