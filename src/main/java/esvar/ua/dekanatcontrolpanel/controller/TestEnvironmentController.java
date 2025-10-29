@@ -32,34 +32,8 @@ public class TestEnvironmentController {
     @PreAuthorize("hasAnyRole('ADMIN','TEST_MANAGER')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public CommandResponse startEnvironment() {
-        ShellCommandResult result = testEnvironmentService.startEnvironment();
-        testEnvironmentService.start(SecurityUtils.getCurrentUserEmailOrThrow());
-        return toResponse(result);
-    }
-
-    @PostMapping("/stop")
-    @PreAuthorize("hasAnyRole('ADMIN','TEST_MANAGER')")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public CommandResponse stopEnvironment() {
-        ShellCommandResult result = testEnvironmentService.stopEnvironment();
-        testEnvironmentService.stop(SecurityUtils.getCurrentUserEmailOrThrow());
-        return toResponse(result);
-    }
-
-    @PostMapping("/restart")
-    @PreAuthorize("hasAnyRole('ADMIN','TEST_MANAGER')")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public CommandResponse startEnvironment() {
         String email = SecurityUtils.getCurrentUserEmailOrThrow();
         ShellCommandResult result = testEnvironmentService.startEnvironment(email);
-        return toResponse(result);
-    }
-
-    @PostMapping("/stop")
-    @PreAuthorize("hasAnyRole('ADMIN','TEST_MANAGER')")
-    public CommandResponse stopEnvironment() {
-        String email = SecurityUtils.getCurrentUserEmailOrThrow();
-        ShellCommandResult result = testEnvironmentService.stopEnvironment(email);
         return toResponse(result);
     }
 
@@ -68,6 +42,14 @@ public class TestEnvironmentController {
     public CommandResponse restartEnvironment() {
         String email = SecurityUtils.getCurrentUserEmailOrThrow();
         ShellCommandResult result = testEnvironmentService.restartEnvironment(email);
+        return toResponse(result);
+    }
+
+    @PostMapping("/stop")
+    @PreAuthorize("hasAnyRole('ADMIN','TEST_MANAGER')")
+    public CommandResponse stopEnvironment() {
+        String email = SecurityUtils.getCurrentUserEmailOrThrow();
+        ShellCommandResult result = testEnvironmentService.stopEnvironment(email);
         return toResponse(result);
     }
 
