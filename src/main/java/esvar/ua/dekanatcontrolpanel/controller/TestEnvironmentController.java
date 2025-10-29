@@ -49,18 +49,33 @@ public class TestEnvironmentController {
     @PostMapping("/restart")
     @PreAuthorize("hasAnyRole('ADMIN','TEST_MANAGER')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    public CommandResponse startEnvironment() {
+        String email = SecurityUtils.getCurrentUserEmailOrThrow();
+        ShellCommandResult result = testEnvironmentService.startEnvironment(email);
+        return toResponse(result);
+    }
+
+    @PostMapping("/stop")
+    @PreAuthorize("hasAnyRole('ADMIN','TEST_MANAGER')")
+    public CommandResponse stopEnvironment() {
+        String email = SecurityUtils.getCurrentUserEmailOrThrow();
+        ShellCommandResult result = testEnvironmentService.stopEnvironment(email);
+        return toResponse(result);
+    }
+
+    @PostMapping("/restart")
+    @PreAuthorize("hasAnyRole('ADMIN','TEST_MANAGER')")
     public CommandResponse restartEnvironment() {
-        ShellCommandResult result = testEnvironmentService.restartEnvironment();
-        testEnvironmentService.restart(SecurityUtils.getCurrentUserEmailOrThrow());
+        String email = SecurityUtils.getCurrentUserEmailOrThrow();
+        ShellCommandResult result = testEnvironmentService.restartEnvironment(email);
         return toResponse(result);
     }
 
     @PostMapping("/update")
     @PreAuthorize("hasAnyRole('ADMIN','TEST_MANAGER')")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public CommandResponse updateEnvironment(@RequestBody(required = false) UpdateRequest request) {
-        ShellCommandResult result = testEnvironmentService.updateEnvironment(request != null ? request.getTriggeredBy() : null);
-        testEnvironmentService.update(SecurityUtils.getCurrentUserEmailOrThrow());
+    public CommandResponse updateEnvironment() {
+        String email = SecurityUtils.getCurrentUserEmailOrThrow();
+        ShellCommandResult result = testEnvironmentService.updateEnvironment(email);
         return toResponse(result);
     }
 
@@ -78,18 +93,6 @@ public class TestEnvironmentController {
             return value;
         }
         return value.substring(0, maxLength);
-    }
-
-    public static class UpdateRequest {
-        private String triggeredBy;
-
-        public String getTriggeredBy() {
-            return triggeredBy;
-        }
-
-        public void setTriggeredBy(String triggeredBy) {
-            this.triggeredBy = triggeredBy;
-        }
     }
 
     public static class CommandResponse {

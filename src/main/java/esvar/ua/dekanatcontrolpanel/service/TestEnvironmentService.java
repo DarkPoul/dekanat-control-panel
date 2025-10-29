@@ -55,24 +55,24 @@ public class TestEnvironmentService {
         return new TestEnvironmentStatusDto(running, version, uptime, health, "N/A");
     }
 
-    public ShellCommandResult startEnvironment() {
+    public ShellCommandResult startEnvironment(String triggeredByEmail) {
         String script = requireScript("start", properties.getScripts().getStart());
-        return runScript(script);
+        return executeManagedScript(triggeredByEmail, script, "TEST_START");
     }
 
-    public ShellCommandResult stopEnvironment() {
+    public ShellCommandResult stopEnvironment(String triggeredByEmail) {
         String script = requireScript("stop", properties.getScripts().getStop());
-        return runScript(script);
+        return executeManagedScript(triggeredByEmail, script, "TEST_STOP");
     }
 
-    public ShellCommandResult restartEnvironment() {
+    public ShellCommandResult restartEnvironment(String triggeredByEmail) {
         String script = requireScript("restart", properties.getScripts().getRestart());
-        return runScript(script);
+        return executeManagedScript(triggeredByEmail, script, "TEST_RESTART");
     }
 
-    public ShellCommandResult updateEnvironment(String triggeredBy) {
+    public ShellCommandResult updateEnvironment(String triggeredByEmail) {
         String script = requireScript("update", properties.getScripts().getUpdate());
-        return runScript(script);
+        return executeManagedScript(triggeredByEmail, script, "TEST_UPDATE");
     }
 
     private boolean determineRunning(ShellCommandResult result) {
@@ -138,36 +138,33 @@ public class TestEnvironmentService {
         return value;
     }
 
+    private ShellCommandResult executeManagedScript(String triggeredByEmail, String scriptPath, String actionType) {
+        String email = normalizeEmail(triggeredByEmail);
+        ShellCommandResult result = runScript(scriptPath);
+        recordAudit(email, actionType, result);
+        return result;
+    }
+
     private ShellCommandResult runScript(String scriptPath) {
         return commandRunner.execute(List.of(scriptPath));
     }
 
-    public void start(String triggeredByEmail) {
-        recordAudit(triggeredByEmail, "TEST_START");
-    }
-
-    public void stop(String triggeredByEmail) {
-        recordAudit(triggeredByEmail, "TEST_STOP");
-    }
-
-    public void restart(String triggeredByEmail) {
-        recordAudit(triggeredByEmail, "TEST_RESTART");
-    }
-
-    public void update(String triggeredByEmail) {
-        recordAudit(triggeredByEmail, "TEST_UPDATE");
-    }
-
-    private void recordAudit(String triggeredByEmail, String actionType) {
-        if (triggeredByEmail == null || triggeredByEmail.isBlank()) {
+    private String normalizeEmail(String email) {
+        if (!StringUtils.hasText(email)) {
             throw new IllegalArgumentException("triggeredByEmail must not be blank");
         }
+        return email.trim();
+    }
+
+
+
+    private void recordAudit(String triggeredByEmail, String actionType, ShellCommandResult result) {
         AuditEvent auditEvent = new AuditEvent();
         auditEvent.setUserEmail(triggeredByEmail);
         auditEvent.setActionType(actionType);
         auditEvent.setTargetEnv(TEST_ENVIRONMENT);
         auditEvent.setTimestamp(Instant.now());
-        auditEvent.setStatus(AuditEvent.Status.SUCCESS);
+        auditEvent.setStatus(result.isSuccess() ? AuditEvent.Status.SUCCESS : AuditEvent.Status.FAILED);
         auditEventRepository.save(auditEvent);
     }
 
